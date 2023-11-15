@@ -3,11 +3,19 @@ const router = express.Router();
 const productController = require("../controllers/ProductController");
 const { authorityMiddleware } = require("../middleware/authorityMiddleware");
 
-router.post("/create", authorityMiddleware, productController.createProduct);
-router.put("/update/:id", authorityMiddleware, productController.updateProduct);
+router.post(
+  "/create",
+  //  authorityMiddleware,
+  productController.createProduct
+);
+router.put(
+  "/update/:id",
+  // authorityMiddleware,
+  productController.updateProduct
+);
 router.delete(
   "/delete-product/:id",
-  authorityMiddleware,
+  // authorityMiddleware,
   productController.deleteProduct
 );
 router.get("/getAll", productController.getAllProduct);

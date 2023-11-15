@@ -17,13 +17,7 @@ router.get(
   OrderController.getAllOrderDetails
 );
 router.get("/get-details-order/:id", OrderController.getDetailsOrder);
-router.delete(
-  "/cancel-order/:id",
-  authorityUserMiddleware,
-  OrderController.cancelOrderDetails
-);
-router.get("/get-all-order", authorityMiddleware, OrderController.getAllOrder);
 
-router.put("/update/:id", authorityMiddleware, OrderController.updateOrder);
+router.get("/get-all-order", authorityMiddleware, OrderController.getAllOrder);
 
 module.exports = router;

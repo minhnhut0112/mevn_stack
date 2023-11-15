@@ -3,44 +3,44 @@ const JwtService = require("../services/JwtService");
 
 const createUser = async (req, res) => {
   try {
-    const { email, name, phone, password, confirmPassword } = req.body;
-    const regEmail =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    const regPhone = /^[0-9]+$/;
-    const isCheckEmail = regEmail.test(email);
-    const isCheckPhone = regPhone.test(phone);
-    if (!name || !email || !password || !confirmPassword || !phone) {
-      return res.status(200).json({
-        status: "Err",
-        message: "The input is required",
-      });
-    } else if (!isCheckEmail) {
-      return res.status(200).json({
-        status: "Err",
-        message: "The Email invalidate",
-      });
-    } else if (!isCheckPhone) {
-      return res.status(200).json({
-        status: "Err",
-        message: "The phone is number",
-      });
-    } else if (phone.length != Number(10)) {
-      return res.status(200).json({
-        status: "Err",
-        message: "The phone is 10 number",
-      });
-    } else if (password.length < Number(8)) {
-      console.log(password.length);
-      return res.status(200).json({
-        status: "Err",
-        message: "Password must be at least 8 characters",
-      });
-    } else if (password !== confirmPassword) {
-      return res.status(200).json({
-        status: "Err",
-        message: "The password is equal confirmPassword",
-      });
-    }
+    // const { email, name, phone, password, confirmPassword } = req.body;
+    // const regEmail =
+    //   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    // const regPhone = /^[0-9]+$/;
+    // const isCheckEmail = regEmail.test(email);
+    // const isCheckPhone = regPhone.test(phone);
+    // if (!name || !email || !password || !confirmPassword || !phone) {
+    //   return res.status(200).json({
+    //     status: "Err",
+    //     message: "The input is required",
+    //   });
+    // } else if (!isCheckEmail) {
+    //   return res.status(200).json({
+    //     status: "Err",
+    //     message: "The Email invalidate",
+    //   });
+    // } else if (!isCheckPhone) {
+    //   return res.status(200).json({
+    //     status: "Err",
+    //     message: "The phone is number",
+    //   });
+    // } else if (phone.length != Number(10)) {
+    //   return res.status(200).json({
+    //     status: "Err",
+    //     message: "The phone is 10 number",
+    //   });
+    // } else if (password.length < Number(8)) {
+    //   console.log(password.length);
+    //   return res.status(200).json({
+    //     status: "Err",
+    //     message: "Password must be at least 8 characters",
+    //   });
+    // } else if (password !== confirmPassword) {
+    //   return res.status(200).json({
+    //     status: "Err",
+    //     message: "The password is equal confirmPassword",
+    //   });
+    // }
 
     const response = await UserService.createUser(req.body);
     return res.status(200).json(response);
