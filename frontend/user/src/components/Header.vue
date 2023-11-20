@@ -1,30 +1,67 @@
 <template>
   <div>
     <div class="header-top">
-      Login
-      <i class="fa-regular fa-user"></i>
+      <div v-if="user?._id" class="">
+        <router-link to="sign-in" class="nav-header">
+          <div data-bs-toggle="dropdown" aria-expanded="false">
+            {{ user?.name }}<i class="fa-regular fa-user mt-1 mx-2"></i>
+          </div>
+          <ul class="dropdown-menu">
+            <li>
+              <router-link to="/profile" class="nav-link menu-item"
+                >My profile</router-link
+              >
+              <hr class="menu" />
+            </li>
+            <li>
+              <router-link to="/orderpage" class="nav-link menu-item"
+                >My Order</router-link
+              >
+              <hr class="menu" />
+            </li>
+            <li>
+              <div class="menu-item" @click="logOut()">Log Out</div>
+            </li>
+          </ul>
+        </router-link>
+      </div>
+      <div v-if="!user?._id">
+        <router-link to="/sign-in" class="nav-link">
+          <div>LogIn<i class="fa-regular fa-user mt-1 mx-2"></i></div>
+        </router-link>
+      </div>
     </div>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <p>logo</p>
+        <router-link to="/" class="nav-header"
+          ><p class="title">Space Time</p></router-link
+        >
         <div>
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link text-body" href="">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-body" aria-current="page" href=""
-                >G-SHOCK</a
+              <router-link to="/" class="nav-header"
+                ><p class="nav-link text-body">Home</p></router-link
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link text-body" href="">BABY-G</a>
+              <router-link to="/type/G-SHOCK" class="nav-header"
+                ><p class="nav-link text-body">G-SHOCK</p></router-link
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link text-body" href="">EDIFICE</a>
+              <router-link to="/type/BABY-G" class="nav-header"
+                ><p class="nav-link text-body">BABY-G</p></router-link
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link text-body" href="">PRO TREK</a>
+              <router-link to="/type/EDIFICE" class="nav-header"
+                ><p class="nav-link text-body">EDIFICE</p></router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link to="/type/PRO-TREK" class="nav-header"
+                ><p class="nav-link text-body">PRO-TREK</p></router-link
+              >
             </li>
           </ul>
         </div>
@@ -35,15 +72,62 @@
           </div>
         </div>
       </div>
+
+      <i
+        @click="goToCartPage"
+        class="fa-solid fa-cart-shopping fa-xl mt-1 mx-2 cart"
+      ></i>
     </nav>
   </div>
 </template>
 
 <script>
-export default {};
+import UserService from "@/services/user_service";
+export default {
+  data() {
+    return {
+      user: {},
+    };
+  },
+  created() {
+    let userId = localStorage.getItem("userId");
+    if (userId) {
+      this.getdetail(userId);
+    }
+  },
+  methods: {
+    async getdetail(userId) {
+      const res = await UserService.getdetail(userId);
+      this.user = res.data;
+    },
+    logOut() {
+      localStorage.removeItem("userId");
+      localStorage.removeItem("orders");
+      window.location.href = "/";
+    },
+    goToCartPage() {
+      this.$router.push({ name: "cartpage" });
+    },
+  },
+};
 </script>
 
-<style>
+<style scoped>
+.cart {
+  cursor: pointer;
+}
+.title {
+  margin: 0px;
+  font-weight: bold;
+  font-size: 20px;
+}
+.menu {
+  margin: 10px 0px;
+}
+
+.menu-item {
+  margin: 0px 20px;
+}
 .search {
   width: 180px;
   height: 2.5rem;
@@ -81,5 +165,9 @@ input:focus {
   justify-content: end;
   padding: 5px;
   padding-right: 10px;
+}
+.nav-header {
+  color: black;
+  text-decoration: none;
 }
 </style>

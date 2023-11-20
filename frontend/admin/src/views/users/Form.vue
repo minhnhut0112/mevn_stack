@@ -21,10 +21,10 @@
             id="email"
             class="form-control"
             v-model="user.email"
-            v-bind:class="{ 'is-invalid': errormess.type }"
+            v-bind:class="{ 'is-invalid': errormess.email }"
           />
-          <span class="invalid-feedback" v-if="errormess.type">{{
-            errormess.type
+          <span class="invalid-feedback" v-if="errormess.email">{{
+            errormess.email
           }}</span>
         </div>
         <div class="mb-3">
@@ -47,10 +47,10 @@
             id="name"
             class="form-control"
             v-model="user.phone"
-            v-bind:class="{ 'is-invalid': errormess.name }"
+            v-bind:class="{ 'is-invalid': errormess.phone }"
           />
-          <span class="invalid-feedback" v-if="errormess.name">{{
-            errormess.name
+          <span class="invalid-feedback" v-if="errormess.phone">{{
+            errormess.phone
           }}</span>
         </div>
         <div class="mb-3">
@@ -60,10 +60,10 @@
             id="name"
             class="form-control"
             v-model="user.address"
-            v-bind:class="{ 'is-invalid': errormess.name }"
+            v-bind:class="{ 'is-invalid': errormess.address }"
           />
-          <span class="invalid-feedback" v-if="errormess.name">{{
-            errormess.name
+          <span class="invalid-feedback" v-if="errormess.address">{{
+            errormess.address
           }}</span>
         </div>
 

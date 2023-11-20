@@ -1,71 +1,11 @@
 <template>
   <div>
     <div class="container content">
-      <h3 class="title">Type Title</h3>
-
-      <div class="row">
-        <div class="col-3">
-          <div class="card">
-            <img
-              src="https://gshock.casio.com/content/dam/casio/product-info/locales/vn/vi/timepiece/product/watch/G/GM/GMS/gm-s2100b-8a/assets/GM-S2100B-8A.png.transform/product-panel/image.png"
-              class="card-img-top color"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-3">
-          <div class="card">
-            <img
-              src="https://gshock.casio.com/content/dam/casio/product-info/locales/vn/vi/timepiece/product/watch/G/GM/GMS/gm-s2100b-8a/assets/GM-S2100B-8A.png.transform/product-panel/image.png"
-              class="card-img-top color"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-3">
-          <div class="card">
-            <img
-              src="https://gshock.casio.com/content/dam/casio/product-info/locales/vn/vi/timepiece/product/watch/G/GM/GMS/gm-s2100b-8a/assets/GM-S2100B-8A.png.transform/product-panel/image.png"
-              class="card-img-top color color"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-3">
-          <div class="card">
-            <img
-              src="https://gshock.casio.com/content/dam/casio/product-info/locales/vn/vi/timepiece/product/watch/G/GM/GMS/gm-s2100b-8a/assets/GM-S2100B-8A.png.transform/product-panel/image.png"
-              class="card-img-top color"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Namet</h5>
-              <p class="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p>
-            </div>
+      <h3 class="title mx-2">{{ titleType }}</h3>
+      <div class="container content">
+        <div class="row">
+          <div class="col-3" v-for="product in products" :key="product.id">
+            <CardProduct :product="product" />
           </div>
         </div>
       </div>
@@ -74,7 +14,43 @@
 </template>
 
 <script>
-export default {};
+import ProductService from "@/services/product_service";
+import CardProduct from "@/components/CardProduct.vue";
+
+export default {
+  components: {
+    CardProduct,
+  },
+  data() {
+    return {
+      products: [],
+      titleType: "",
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  watch: {
+    "$route.params.type"(newType) {
+      this.titleType = newType;
+      this.fetchData();
+    },
+  },
+  methods: {
+    async fetchData() {
+      try {
+        const typeProduct = this.$route.params.type;
+        this.titleType = typeProduct;
+        if (typeProduct) {
+          const res = await ProductService.getProductType(typeProduct);
+          this.products = res.data;
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
+  },
+};
 </script>
 
 <style>

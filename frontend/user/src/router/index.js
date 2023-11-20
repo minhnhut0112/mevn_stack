@@ -8,22 +8,12 @@ const routes = [
     component: HomePage,
   },
   {
-    path: "/:pathMatch(.*)*",
-    name: "notfound",
-    component: () => import("@/views/NotFound.vue"),
-  },
-  {
-    path: "/admin",
-    name: "adminpage",
-    component: () => import("@/views/AdminPage.vue"),
-  },
-  {
-    path: "/type",
+    path: "/type/:type",
     name: "typepage",
     component: () => import("@/views/TypeProduct.vue"),
   },
   {
-    path: "/productdetails",
+    path: "/productdetails/:id",
     name: "productdetails",
     component: () => import("@/views/ProductDetails.vue"),
   },
@@ -31,6 +21,41 @@ const routes = [
     path: "/cartpage",
     name: "cartpage",
     component: () => import("@/views/CartPage.vue"),
+  },
+  {
+    path: "/checkout",
+    name: "checkout",
+    component: () => import("@/views/CheckOutPage.vue"),
+  },
+  {
+    path: "/ordersuccess",
+    name: "ordersuccess",
+    component: () => import("@/views/OrderSuccess.vue"),
+  },
+  {
+    path: "/sign-in",
+    name: "signin",
+    component: () => import("@/views/SignInPage.vue"),
+  },
+  {
+    path: "/sign-up",
+    name: "signup",
+    component: () => import("@/views/SignUpPage.vue"),
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: () => import("@/views/ProfilePage.vue"),
+  },
+  {
+    path: "/orderpage",
+    name: "orderpage",
+    component: () => import("@/views/OrderPage.vue"),
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "notfound",
+    component: () => import("@/views/NotFound.vue"),
   },
 ];
 

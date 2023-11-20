@@ -16,7 +16,9 @@ const createOrder = (newOrder) => {
       email,
     } = newOrder;
     try {
+      console.log(orderItems);
       const promises = orderItems.map(async (order) => {
+        console.log(order);
         const productData = await Product.findOneAndUpdate(
           {
             _id: order.product,
@@ -69,7 +71,6 @@ const createOrder = (newOrder) => {
           paidAt,
         });
         if (createdOrder) {
-          // await EmailService.sendEmailCreateOrder(email, orderItems);
           resolve({
             status: "OK",
             message: "success",
@@ -88,30 +89,6 @@ const getAllOrderDetails = (id) => {
       const order = await Order.find({
         user: id,
       }).sort({ createdAt: -1, updatedAt: -1 });
-      if (order === null) {
-        resolve({
-          status: "ERR",
-          message: "The order is not defined",
-        });
-      }
-
-      resolve({
-        status: "OK",
-        message: "SUCESSS",
-        data: order,
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
-};
-
-const getOrderDetails = (id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const order = await Order.findById({
-        _id: id,
-      });
       if (order === null) {
         resolve({
           status: "ERR",
@@ -151,6 +128,5 @@ const getAllOrder = () => {
 module.exports = {
   createOrder,
   getAllOrderDetails,
-  getOrderDetails,
   getAllOrder,
 };
