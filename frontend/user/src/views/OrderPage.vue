@@ -5,6 +5,15 @@
       <h3>My Order</h3>
       <hr />
       <div :key="index" v-for="(order, index) in orders">
+        <h6>Order Info:</h6>
+        <div class="mx-2">
+          <p class="mb-1">Name: {{ order.shippingAddress.fullName }}</p>
+          <p class="mb-1">Email: {{ order.shippingAddress.email }}</p>
+          <p class="mb-1">Phone: {{ order.shippingAddress.phone }}</p>
+          <p class="mb-1">Address: {{ order.shippingAddress.address }}</p>
+          <p>Payment Method: {{ order.paymentMethod }}</p>
+        </div>
+        <h6>Order Items:</h6>
         <div
           class="row mb-2"
           :key="indexorder"
@@ -21,6 +30,14 @@
         </div>
         <div class="text-end">
           <h6>Total Price: $ {{ order.totalPrice }}</h6>
+          <button
+            v-if="!order.isDelivered"
+            @click="cancelOrder(order._id, order.orderItems)"
+            type="button"
+            class="btn btn-outline-danger"
+          >
+            Cancel Order
+          </button>
         </div>
         <hr />
       </div>
@@ -38,12 +55,20 @@ export default {
     };
   },
   created() {
-    this.getAllOrder();
+    this.getAllById();
   },
   methods: {
-    async getAllOrder() {
-      const res = await OrderService.getAll();
+    async getAllById() {
+      const userId = localStorage.getItem("userId");
+      const res = await OrderService.getAllById(userId);
       this.orders = res.data;
+    },
+    async cancelOrder(id, item) {
+      const res = await OrderService.cancelOrder(id, item);
+      if (res.status === "OK") {
+        alert("Cancel Successfully!");
+        this.getAllById();
+      }
     },
   },
 };

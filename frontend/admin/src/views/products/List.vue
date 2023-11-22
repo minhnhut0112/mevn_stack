@@ -4,9 +4,32 @@
     <div v-if="showMess" class="alert alert-success mess" role="alert">
       Product deleted successfully!
     </div>
-    <router-link to="/product/create">
-      <button type="button" class="btn btn-outline-primary">Add Product</button>
-    </router-link>
+    <div class="f-lex justify-content-between">
+      <div class="row mt-3 mb-3">
+        <div class="col-3">
+          <router-link to="/product/create">
+            <button type="button" class="btn btn-outline-primary">
+              Add Product
+            </button>
+          </router-link>
+        </div>
+        <div class="col-5"></div>
+        <div class="col-4">
+          <div class="d-flex" role="search">
+            <input
+              v-model="searchQuery"
+              class="form-control me-2"
+              type="search"
+              placeholder="Search"
+              @input="searchProduct"
+            />
+            <button type="button" class="btn btn-outline-success">
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <table class="table">
       <thead>
         <tr>
@@ -53,6 +76,7 @@ export default {
     return {
       products: [],
       showMess: false,
+      searchQuery: "",
     };
   },
   created() {
@@ -71,6 +95,15 @@ export default {
         setTimeout(() => {
           this.showMess = false;
         }, 2000);
+      }
+    },
+
+    async searchProduct() {
+      if (this.searchQuery) {
+        const res = await ProductService.searchProduct(this.searchQuery);
+        this.products = res.data;
+      } else {
+        this.getAll();
       }
     },
   },

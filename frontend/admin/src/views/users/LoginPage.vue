@@ -5,7 +5,7 @@
       <div class="col-8 background-center mt-5 mb-5">
         <div class="row">
           <div class="col-6">
-            <img src="../assets/images/log-login.jpg" class="image" />
+            <img src="../../assets/images/log-login.jpg" class="image" />
           </div>
           <div class="col">
             <h2 class="text-center mt-2">Sign In</h2>
@@ -82,14 +82,6 @@ export default {
       messErr: "",
     };
   },
-  created() {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      this.$router.push({
-        name: "homepage",
-      });
-    }
-  },
   methods: {
     validate() {
       let isValid = true;
@@ -113,11 +105,12 @@ export default {
         if (res.status === "OK") {
           const token = res.access_token;
           let decoded = VueJwtDecode.decode(token);
-          localStorage.setItem("userId", decoded.id);
-          this.$router.push({
-            name: "homepage",
-            query: { userId: decoded.id },
-          });
+          if (decoded.isAdmin) {
+            localStorage.setItem("userId", decoded.id);
+            this.$router.push({ name: "product.list" });
+          } else {
+            this.messErr = "User is not admin";
+          }
         } else {
           this.messErr = res.message;
         }

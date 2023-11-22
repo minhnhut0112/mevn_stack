@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.4.2",
+    "@paypal/paypal-js": "^7.1.0",
     "axios": "^1.6.1",
     "bootstrap": "^5.3.2",
     "jquery": "^3.7.1",
@@ -16,6 +17,7 @@
     "popper.js": "^1.16.1",
     "vue": "^3.3.4",
     "vue-jwt-decode": "^0.1.0",
+    "vue-paypal-checkout": "^3.2.0",
     "vue-router": "^4.2.5",
     "vue-toasted": "^1.1.28",
     "vuetify": "^3.4.0",

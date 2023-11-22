@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <p>logo</p>
+        <p style="font-weight: bold">SPACE TIME</p>
         <div>
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item">
@@ -10,18 +10,25 @@
                 >Product Manager</router-link
               >
             </li>
+
+            <li class="nav-item">
+              <router-link class="nav-link text-body" to="/orders"
+                >Order Manager</router-link
+              >
+            </li>
             <li class="nav-item">
               <router-link class="nav-link text-body" to="/users"
                 >User Manager</router-link
               >
             </li>
-            <li class="nav-item">
-              <a class="nav-link text-body" href="">Order Manager</a>
-            </li>
           </ul>
         </div>
         <div class="d-flex justify-content-center">
-          <i class="fa-solid fa-right-from-bracket fa-2xl"></i>
+          <i
+            style="cursor: pointer"
+            @click="logOut()"
+            class="fa-solid fa-right-from-bracket fa-2xl"
+          ></i>
         </div>
       </div>
     </nav>
@@ -29,7 +36,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    logOut() {
+      localStorage.removeItem("userId");
+      this.$router.push({ name: "login" });
+    },
+  },
+};
 </script>
 
 <style scoped>

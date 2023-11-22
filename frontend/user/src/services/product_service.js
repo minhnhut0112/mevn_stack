@@ -7,6 +7,9 @@ class ProductService {
   async getAll() {
     return (await this.api.get("/getAll")).data;
   }
+  async searchProduct(search) {
+    return (await this.api.get(`/getAll?filter=name&filter=${search}`)).data;
+  }
   async create(data) {
     return (await this.api.post("/create", data)).data;
   }

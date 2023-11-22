@@ -7,9 +7,6 @@ class OrderService {
   async getAll() {
     return (await this.api.get("/get-all-order")).data;
   }
-  async getAllById(id) {
-    return (await this.api.get(`/get-all-order/${id}`)).data;
-  }
   async createOrder(data) {
     return (await this.api.post(`/create`, data)).data;
   }
@@ -18,11 +15,6 @@ class OrderService {
   }
   async updateOrder(id) {
     return (await this.api.put(`/update/${id}`)).data;
-  }
-  async cancelOrder(id, orderItems) {
-    return (
-      await this.api.delete(`/cancel-order/${id}`, { data: { orderItems } })
-    ).data;
   }
 }
 export default new OrderService();

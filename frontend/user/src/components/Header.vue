@@ -66,9 +66,69 @@
           </ul>
         </div>
         <div class="d-flex justify-content-center">
-          <div className="search">
+          <div @click="openSearchModal" class="search">
             <i class="fa-solid fa-magnifying-glass icon-search"></i>
             <input placeholder="Search..." type="search" />
+          </div>
+
+          <div
+            class="modal fade modal-search"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+            ref="myModal"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content modal-search">
+                <div class="modal-header">
+                  <i class="fa-solid fa-magnifying-glass icon-search"></i>
+                  <input
+                    placeholder="Search..."
+                    type="search"
+                    style="width: 100%"
+                    v-model="searchQuery"
+                    @input="searchProduct"
+                  />
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div
+                  class="modal-body"
+                  :key="index"
+                  v-for="(product, index) in products"
+                >
+                  <router-link
+                    :to="{
+                      name: 'productdetails',
+                      params: { id: product._id },
+                    }"
+                    class="nav-link"
+                    @click="closeSearchModal"
+                  >
+                    <div class="row">
+                      <div class="col-3">
+                        <img
+                          :src="product.image"
+                          width="100"
+                          height="100"
+                          alt=""
+                        />
+                      </div>
+                      <div class="col-7">
+                        <h6>{{ product.name }}</h6>
+                        <p>{{ product.type }}</p>
+                        <p class="text-danger">$ {{ product.price }}</p>
+                      </div>
+                    </div>
+                  </router-link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -83,10 +143,13 @@
 
 <script>
 import UserService from "@/services/user_service";
+import ProductService from "@/services/product_service";
 export default {
   data() {
     return {
       user: {},
+      products: [],
+      searchQuery: "",
     };
   },
   created() {
@@ -95,24 +158,63 @@ export default {
       this.getdetail(userId);
     }
   },
+  watch: {
+    "$route.query.userId": function (newUserId, oldUserId) {
+      console.log("Watcher triggered!", newUserId, oldUserId);
+      if (newUserId === null) {
+        this.user = "";
+      } else {
+        this.getdetail(newUserId);
+        this.$forceUpdate();
+      }
+    },
+  },
   methods: {
     async getdetail(userId) {
       const res = await UserService.getdetail(userId);
-      this.user = res.data;
+      if (res.status === "OK") {
+        this.user = res.data;
+      } else {
+        this.user = "";
+      }
     },
     logOut() {
       localStorage.removeItem("userId");
       localStorage.removeItem("orders");
-      window.location.href = "/";
+      this.$router.push({ query: { userId: null } });
+      this.$forceUpdate();
     },
     goToCartPage() {
       this.$router.push({ name: "cartpage" });
+    },
+    async searchProduct() {
+      if (this.searchQuery) {
+        const res = await ProductService.searchProduct(this.searchQuery);
+        this.products = res.data;
+      } else {
+        this.products = [];
+      }
+    },
+    openSearchModal() {
+      if (!this.$refs.myModal.classList.contains("show")) {
+        $("#exampleModal").modal("show");
+      }
+    },
+    closeSearchModal() {
+      this.searchQuery = "";
+      this.products = this.searchQuery;
+      $("#exampleModal").modal("hide");
+      $(".modal-backdrop").remove();
     },
   },
 };
 </script>
 
 <style scoped>
+.modal-search {
+  min-height: 500px;
+  max-height: 800px;
+}
 .cart {
   cursor: pointer;
 }

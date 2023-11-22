@@ -7,6 +7,9 @@ class ProductService {
   async getAll() {
     return (await this.api.get("/getAll")).data;
   }
+  async login(data) {
+    return (await this.api.post("/sign-in", data)).data;
+  }
   async create(data) {
     return (await this.api.post("/create", data)).data;
   }

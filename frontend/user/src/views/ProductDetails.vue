@@ -124,6 +124,9 @@ export default {
       }
     },
   },
+  watch: {
+    "$route.params.id": "fetchData",
+  },
 };
 </script>
 

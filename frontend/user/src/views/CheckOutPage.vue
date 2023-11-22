@@ -43,6 +43,7 @@
         </div>
 
         <button
+          :disabled="!user.name || !user.phone || !user.email || !user.address"
           type="button"
           @click="updateInfoUser(user._id)"
           class="btn btn-outline-primary"
@@ -55,17 +56,53 @@
       <h3>Total Sumary</h3>
       <hr />
       <p class="d-flex justify-content-between">
-        <span>Sub Total: </span> <span>${{ totalPrice }}</span>
+        <span>Sub Total: </span> <span>{{ totalPrice }} $</span>
       </p>
       <p class="d-flex justify-content-between">
-        <span>Shipping dilivery: </span> <span>Free</span>
+        <span>Estimated Delivery: </span> <span>Free</span>
       </p>
       <hr />
       <h5 class="d-flex justify-content-between">
-        <span>Sub Total: </span> <span>${{ totalPrice }}</span>
+        <span>Total: </span> <span>{{ totalPrice }} $</span>
       </h5>
+      <hr />
+      <div class="mb-3">
+        <h5 class="form-label">Payment Method</h5>
 
-      <button class="addcart" @click="handleOrder()">Order Now</button>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            v-model="paymentMethod"
+            value="cash"
+            id="flexRadioDefault2"
+          />
+          <label class="form-check-label" for="flexRadioDefault2"> Cash </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            v-model="paymentMethod"
+            value="paypal"
+            id="flexRadioDefault1"
+            @click="initPayPalButton()"
+          />
+          <label class="form-check-label" for="flexRadioDefault1">
+            PayPal
+          </label>
+        </div>
+      </div>
+      <button
+        v-if="paymentMethod === 'cash'"
+        class="addcart"
+        @click="handleOrder()"
+      >
+        Order Now
+      </button>
+      <div v-if="paymentMethod === 'paypal'">
+        <div id="paypal-button-container"></div>
+      </div>
     </div>
     <div class="col-2"></div>
   </div>
@@ -87,6 +124,7 @@ export default {
       },
       cartItems: [],
       totalPrice: 0,
+      paymentMethod: "cash",
     };
   },
   created() {
@@ -128,6 +166,41 @@ export default {
         alert("Update successfully");
       }
     },
+    async initPayPalButton() {
+      const paypalScript = document.createElement("script");
+      paypalScript.src =
+        "https://www.paypal.com/sdk/js?client-id=AenCz6GbM1EDk97hxeMdQakLOqlxNUXrA51E0sxGpbrbLB4o_JM20vyKKEL4E8hPUGglQG1edcVmeYVR&locale=en_US";
+      paypalScript.async = true;
+      paypalScript.onload = () => {
+        this.renderPayPalButton();
+      };
+
+      document.body.appendChild(paypalScript);
+    },
+    renderPayPalButton() {
+      paypal
+        .Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  amount: {
+                    value: this.totalPrice.toFixed(2),
+                  },
+                },
+              ],
+            });
+          },
+          onApprove: async (data, actions) => {
+            const order = await actions.order.capture();
+            this.handleOrder(order);
+          },
+          onError: (err) => {
+            console.error(err);
+          },
+        })
+        .render("#paypal-button-container");
+    },
     async handleOrder() {
       if (
         this.user.email &&
@@ -146,15 +219,17 @@ export default {
           fullName: this.user?.name,
           address: this.user?.address,
           phone: this.user?.phone,
+          paymentMethod: this.paymentMethod,
         };
         const res = await OrderService.createOrder(data);
         if (res.status === "OK") {
           this.$router.push({ name: "ordersuccess" });
           localStorage.removeItem("orders");
         } else {
+          alert("An error has occurred!");
         }
       } else {
-        alert("Enter ");
+        alert("Please complete all your info!");
       }
     },
   },
